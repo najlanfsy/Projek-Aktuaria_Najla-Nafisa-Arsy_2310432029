@@ -107,16 +107,41 @@ st.markdown("""
     line-height: 1.9;
 }
 
+/* Styling Khusus Tombol Cetak HTML Premium */
+.native-print-btn {
+    background: linear-gradient(135deg, #ff4d88, #ff758f);
+    color: white !important;
+    border: none;
+    padding: 12px 24px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 12px;
+    cursor: pointer;
+    width: 100%;
+    box-shadow: 0px 4px 15px rgba(255, 77, 136, 0.2);
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.native-print-btn:hover {
+    background: linear-gradient(135deg, #ff2a70, #ff4d88);
+    transform: translateY(-2px);
+    box-shadow: 0px 6px 20px rgba(255, 77, 136, 0.3);
+}
+
 /* CSS KHUSUS SAAT CETAK LAPORAN (PRINT/PDF) */
 @media print {
-    /* Sembunyikan sidebar, tombol navigasi, komponen input, dan footer */
+    /* Sembunyikan sidebar, formulir input, tombol aksi, dan widget navigasi */
     [data-testid="stSidebar"], 
-    .stButton, 
     [data-testid="stForm"],
-    .no-print {
+    [data-testid="stHeader"],
+    .stButton, 
+    .no-print,
+    div.element-container:has(button.native-print-btn) {
         display: none !important;
     }
-    /* Sesuaikan ukuran halaman cetak */
+    /* Mengoptimalkan kontras warna untuk cetakan kertas / PDF */
     .stApp {
         background: white !important;
         color: black !important;
@@ -243,13 +268,10 @@ st.markdown("---")
 col_btn1, col_btn2, col_btn3 = st.columns([2, 2, 2])
 
 with col_btn1:
-    # Menggunakan JavaScript untuk memicu trigger print browser asli
-    if st.button("🖨️ Cetak Hasil Laporan (PDF/Print)", use_container_width=True):
-        st.markdown("""
-            <script>
-                window.print();
-            </script>
-        """, unsafe_allow_html=True)
+    # Menggunakan tombol HTML murni yang mengeksekusi fungsi print dokumen utama (window.parent)
+    st.markdown("""
+        <button class="native-print-btn" onclick="window.parent.print()">🖨️ Cetak Hasil Laporan (PDF/Print)</button>
+    """, unsafe_allow_html=True)
 
 with col_btn3:
     # Tombol navigasi kembali ke menu.py secara aman
