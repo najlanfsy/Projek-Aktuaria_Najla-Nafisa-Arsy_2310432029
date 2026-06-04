@@ -5,7 +5,7 @@
 # ============================================================
 
 import streamlit as st
-import streamlit.components.v1 as components  # Komponen native untuk menangani JavaScript Cetak
+import streamlit.components.v1 as components  # Komponen native untuk JavaScript Cetak
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -115,8 +115,9 @@ st.markdown("""
     [data-testid="stHeader"],
     .stButton, 
     .no-print,
+    .stDownloadButton,
     iframe {
-        display: none !important; /* Sembunyikan elemen navigasi dan tombol saat cetak */
+        display: none !important;
     }
     .stApp {
         background: white !important;
@@ -242,23 +243,26 @@ st.markdown("---")
 col_btn1, col_btn2, col_btn3 = st.columns([2, 2, 2])
 
 with col_btn1:
-    # Menggunakan HTML Komponen murni (iframe aman) agar browser mengeksekusi print ke window utama
     print_html = """
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: transparent; overflow: hidden; }
         .luxury-print-btn {
             background: linear-gradient(135deg, #ff4d88, #ff758f);
             color: white !important;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 20px;
             font-family: 'Poppins', sans-serif;
             font-size: 15px;
             font-weight: 500;
             border-radius: 8px;
             cursor: pointer;
             width: 100%;
+            display: block;
             box-shadow: 0px 4px 15px rgba(255, 77, 136, 0.2);
             transition: all 0.3s ease;
             text-align: center;
+            line-height: 1.3;
         }
         .luxury-print-btn:hover {
             background: linear-gradient(135deg, #ff2a70, #ff4d88);
@@ -267,13 +271,12 @@ with col_btn1:
     </style>
     <button class="luxury-print-btn" onclick="window.parent.parent.print()">🖨️ Cetak Hasil Laporan (PDF/Print)</button>
     """
-    components.html(print_html, height=50)
+    components.html(print_html, height=70)
 
 with col_btn3:
     if st.button("⬅️ Kembali ke Menu Utama", use_container_width=True):
         st.switch_page("pages/menu.py")
 
-# Branding Footer khusus web screen saja
 st.markdown("""
 <div class="no-print" style="text-align: center; color: #aaa; margin-top: 30px; font-size: 12px; font-family: 'Poppins';">
     &lt;/&gt; Actuarial Decision Support System — Python Core Module. Dibuat oleh Najla Nafisa Arsy
