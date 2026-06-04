@@ -5,6 +5,7 @@
 # ============================================================
 
 import streamlit as st
+import streamlit.components.v1 as components  # Komponen native untuk JavaScript Cetak
 import matplotlib.pyplot as plt
 
 # ============================================================
@@ -138,7 +139,8 @@ st.markdown("""
     .stButton, 
     [data-testid="stForm"],
     .no-print,
-    [data-testid="stHeader"] {
+    [data-testid="stHeader"],
+    iframe {
         display: none !important;
     }
     .stApp {
@@ -278,13 +280,36 @@ st.markdown("---")
 col_btn1, col_btn2, col_btn3 = st.columns([2, 2, 2])
 
 with col_btn1:
-    # Memicu fungsi jendela cetak fisik bawaan browser/sistem operasi
-    if st.button("🖨️ Cetak Hasil Laporan (PDF/Print)", use_container_width=True):
-        st.markdown("""
-            <script>
-                window.print();
-            </script>
-        """, unsafe_allow_html=True)
+    # Menggunakan HTML Komponen murni dengan penyesuaian tinggi (height=70) agar teks dua baris tidak terpotong
+    print_html = """
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: transparent; overflow: hidden; }
+        .luxury-print-btn {
+            background: linear-gradient(135deg, #ff4d88, #ff758f);
+            color: white !important;
+            border: none;
+            padding: 12px 20px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            display: block;
+            box-shadow: 0px 4px 15px rgba(255, 77, 136, 0.2);
+            transition: all 0.3s ease;
+            text-align: center;
+            line-height: 1.3;
+        }
+        .luxury-print-btn:hover {
+            background: linear-gradient(135deg, #ff2a70, #ff4d88);
+            box-shadow: 0px 6px 20px rgba(255, 77, 136, 0.3);
+        }
+    </style>
+    <button class="luxury-print-btn" onclick="window.parent.parent.print()">🖨️ Cetak Hasil Laporan (PDF/Print)</button>
+    """
+    components.html(print_html, height=70)
 
 with col_btn3:
     # Mengembalikan rute halaman ke dashboard utama (menu.py)
