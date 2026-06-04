@@ -5,14 +5,41 @@
 # ============================================================
 
 import streamlit as st
+import json
+import os
 
 # ============================================================
-# PROTECTIONS: LOGIN CHECK
+# PROTECTIONS: LOGIN CHECK & AMBIL NAMA PENGGUNA DINAMIS
 # ============================================================
 if "logged_in" not in st.session_state or not st.session_state.logged_in:
     st.warning("Silakan login terlebih dahulu untuk mengakses halaman ini.")
     st.switch_page("app.py")
     st.stop()
+
+# Mengambil nama dari session_state secara dinamis
+nama_display = st.session_state.get("nama_user", None)
+
+# Jika tidak ada di session_state, coba tarik dari akun_pengguna.json berdasarkan username login
+if not nama_display and "username" in st.session_state:
+    username_login = st.session_state.username
+    if os.path.exists("akun_pengguna.json"):
+        try:
+            with open("akun_pengguna.json", "r") as f:
+                data_akun = json.load(f)
+                # Mencari nama yang cocok dengan username di database JSON
+                if username_login in data_akun:
+                    nama_display = data_akun[username_login].get("nama", username_login)
+                elif isinstance(data_akun, list): # Antisipasi jika struktur JSON berbentuk list
+                    for akun in data_akun:
+                        if akun.get("username") == username_login:
+                            nama_display = akun.get("nama")
+                            break
+        except Exception:
+            pass
+
+# Fallback terakhir jika nama tetap tidak ditemukan
+if not nama_display:
+    nama_display = "Pengguna Actuarial DSS"
 
 # ============================================================
 # KONFIGURASI HALAMAN
@@ -28,7 +55,7 @@ st.set_page_config(
 # ============================================================
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Poppins:wght=300;400;500;600;700&display=swap');
 
 /* Latar Belakang Aplikasi Lembut Pastel */
 .stApp {
@@ -222,7 +249,8 @@ with st.container():
     st.markdown('<div class="aesthetic-subtitle">Smart Financial & Actuarial Analysis Platform</div>', unsafe_allow_html=True)
     st.markdown('<div class="cute-divider"></div>', unsafe_allow_html=True)
     
-    st.markdown('<div class="aesthetic-welcome-title">👋 Selamat Datang, Najla Nafisa Arsy</div>', unsafe_allow_html=True)
+    # Menampilkan Nama Pengguna secara Dinamis
+    st.markdown(f'<div class="aesthetic-welcome-title">👋 Selamat Datang, {nama_display}</div>', unsafe_allow_html=True)
     st.markdown(
         '<div class="aesthetic-welcome-desc">'
         'Sistem pintar ini siap mendampingi Anda dalam melakukan eksekusi formula matematika aktuaria, '
@@ -309,7 +337,6 @@ with col6:
     """, unsafe_allow_html=True)
     if st.button("Akses Mortalitas", key="btn_mortalitas", help="Buka Halaman Mortalitas & Survival"):
         st.switch_page("pages/mortalitas.py")
-
 
 # ============================================================
 # FOOTER UTAMA INTERFACE
