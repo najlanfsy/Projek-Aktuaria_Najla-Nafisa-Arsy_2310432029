@@ -5,6 +5,7 @@
 # ============================================================
 
 import streamlit as st
+import streamlit.components.v1 as components  # Komponen native untuk JavaScript Cetak
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
@@ -31,7 +32,7 @@ st.set_page_config(
 # ============================================================
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&family=Playfair+Display:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght=300;400;500;700&family=Playfair+Display:wght=700&display=swap');
 
 /* Style Latar Belakang */
 .stApp {
@@ -123,7 +124,8 @@ st.markdown("""
     [data-testid="stForm"],
     .no-print,
     [data-testid="stHeader"],
-    .stDownloadButton {
+    .stDownloadButton,
+    iframe {
         display: none !important;
     }
     .stApp {
@@ -265,8 +267,36 @@ st.markdown("---")
 col_f1, col_f2, col_f3 = st.columns([2, 2, 2])
 
 with col_f1:
-    if st.button("🖨️ Cetak Laporan PDF", use_container_width=True):
-        st.markdown("<script>window.print();</script>", unsafe_allow_html=True)
+    # Menggunakan HTML Komponen murni dengan penyesuaian tinggi (height=70) agar teks tombol cetak tertampung sempurna
+    print_html = """
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: transparent; overflow: hidden; }
+        .luxury-print-btn {
+            background: linear-gradient(135deg, #ff4d88, #ff758f);
+            color: white !important;
+            border: none;
+            padding: 12px 20px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            display: block;
+            box-shadow: 0px 4px 15px rgba(255, 77, 136, 0.2);
+            transition: all 0.3s ease;
+            text-align: center;
+            line-height: 1.3;
+        }
+        .luxury-print-btn:hover {
+            background: linear-gradient(135deg, #ff2a70, #ff4d88);
+            box-shadow: 0px 6px 20px rgba(255, 77, 136, 0.3);
+        }
+    </style>
+    <button class="luxury-print-btn" onclick="window.parent.parent.print()">🖨️ Cetak Hasil Laporan (PDF/Print)</button>
+    """
+    components.html(print_html, height=70)
 
 with col_f3:
     if st.button("⬅️ Kembali ke Menu Utama", use_container_width=True):
