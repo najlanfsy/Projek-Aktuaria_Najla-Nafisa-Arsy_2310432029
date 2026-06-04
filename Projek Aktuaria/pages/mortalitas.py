@@ -1,10 +1,11 @@
 # ============================================================
-# 📊 MORTALITAS & SURVIVAL ANALYSIS PAGE
+# 👴 PERHITUNGAN DANA PENSIUN PAGE
 # Actuarial Decision Support System
 # Streamlit Web Version
 # ============================================================
 
 import streamlit as st
+import streamlit.components.v1 as components  # Komponen native untuk JavaScript Cetak
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
@@ -21,25 +22,25 @@ if "logged_in" not in st.session_state or not st.session_state.logged_in:
 # KONFIGURASI HALAMAN
 # ============================================================
 st.set_page_config(
-    page_title="Mortalitas & Survival - Actuarial DSS",
-    page_icon="📊",
+    page_title="Dana Pensiun - Actuarial DSS",
+    page_icon="👴",
     layout="wide"
 )
 
 # ============================================================
-# CSS CUSTOM (Pink Professional & Cetak Pendukung)
+# CSS CUSTOM (Pink Minimalist & Print Support)
 # ============================================================
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&family=Playfair+Display:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght=300;400;500;700&family=Playfair+Display:wght=700&display=swap');
 
-/* Style Latar Belakang Utama */
+/* Style Latar Belakang */
 .stApp {
     background-color: #fff7fa;
 }
 
-/* Container Utama Header */
-.mortalitas-container {
+/* Header Container */
+.pension-container {
     background: linear-gradient(135deg, #ffb3c7, #ffc2d1, #ffd6e0);
     padding: 35px;
     border-radius: 35px;
@@ -48,7 +49,7 @@ st.markdown("""
     text-align: center;
 }
 
-.mortalitas-title {
+.pension-title {
     font-family: 'Playfair Display', serif;
     font-size: 40px;
     color: white;
@@ -56,235 +57,254 @@ st.markdown("""
     margin-bottom: 10px;
 }
 
-.mortalitas-subtitle {
+.pension-subtitle {
     font-family: 'Poppins', sans-serif;
     color: white;
     font-size: 16px;
     font-weight: 300;
 }
 
-/* Kotak Hasil (Result Cards) */
-.result-card {
-    background: rgba(255, 255, 255, 0.35);
-    border-radius: 22px;
-    padding: 22px;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0px 4px 15px rgba(0,0,0,0.05);
-    border: 1px solid rgba(255,255,255,0.4);
-    text-align: center;
-    transition: 0.3s;
+/* Box Hasil */
+.result-box {
+    background: white;
+    padding: 35px;
+    border-radius: 30px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0px 10px 30px rgba(255,105,135,0.15);
 }
 
-.result-card:hover {
-    transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.5);
+.result-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 34px;
+    color: #ff4d88;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* Card Perhitungan */
+.res-card {
+    background: linear-gradient(135deg, #ffb3c7, #ffd6e0);
+    padding: 25px;
+    border-radius: 25px;
+    text-align: center;
+    color: white;
+    box-shadow: 0px 6px 18px rgba(255,105,135,0.15);
 }
 
 .card-label {
-    font-family: 'Poppins', sans-serif;
-    color: #63414d;
+    font-family: 'Poppins';
     font-size: 14px;
-    margin-bottom: 8px;
     font-weight: 500;
+    margin-bottom: 8px;
 }
 
 .card-val {
-    font-family: 'Poppins', sans-serif;
-    color: #d63384;
-    font-size: 24px;
-    font-weight: 700;
-}
-
-/* Box Rekomendasi */
-.rekom-box {
-    background: white;
-    padding: 28px;
-    border-radius: 25px;
-    margin-top: 25px;
-    margin-bottom: 25px;
-    box-shadow: 0px 6px 20px rgba(0,0,0,0.06);
-    border-left: 5px solid #d63384;
-}
-
-.rekom-title {
-    font-family: 'Poppins', sans-serif;
-    color: #d63384;
+    font-family: 'Poppins';
     font-size: 22px;
     font-weight: 700;
-    margin-bottom: 12px;
 }
 
-.rekom-text {
-    font-family: 'Poppins', sans-serif;
-    color: #555;
-    font-size: 15px;
-    line-height: 1.8;
+/* Status Box */
+.status-banner {
+    margin-top: 25px;
+    padding: 20px;
+    border-radius: 20px;
+    text-align: center;
+    font-family: 'Poppins';
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
 }
 
-/* CSS KHUSUS PRINT LAPORAN (PDF) */
+/* CSS KHUSUS PRINT LAPORAN */
 @media print {
     [data-testid="stSidebar"], 
     .stButton, 
     [data-testid="stForm"],
     .no-print,
-    [data-testid="stHeader"] {
+    [data-testid="stHeader"],
+    .stDownloadButton,
+    iframe {
         display: none !important;
     }
     .stApp {
         background: white !important;
-        color: black !important;
     }
-    .mortalitas-container {
+    .result-box {
+        box-shadow: none !important;
+        border: 1px solid #eee !important;
+    }
+    .res-card {
         color: black !important;
-        border: 2px solid #ddd !important;
         background: #fdf2f4 !important;
-    }
-    .result-card {
-        background: #f8f9fa !important;
-        border: 1px solid #ddd !important;
+        border: 1px solid #ffcad4 !important;
     }
 }
 </style>
 
-<div class="mortalitas-container">
-    <div class="mortalitas-title">MORTALITAS & SURVIVAL</div>
-    <div class="mortalitas-subtitle">Analisis Peluang Hidup dan Mortalitas Berdasarkan Matematika Aktuaria</div>
+<div class="pension-container">
+    <div class="pension-title">DANA PENSIUN</div>
+    <div class="pension-subtitle">Simulasi Perencanaan Dana Masa Tua Strategis</div>
 </div>
 """, unsafe_allow_html=True)
 
 # ============================================================
-# INPUT DATA USER (WIDGET STREAMLIT)
+# INPUT DATA USER
 # ============================================================
-st.subheader("⌨️ Input Parameter Analisis")
+st.subheader("⌨️ Input Parameter Pensiun")
 
 col_in1, col_in2 = st.columns(2)
 
 with col_in1:
-    umur = st.number_input("🎂 Umur Saat Ini (Tahun)", min_value=1, max_value=110, value=25, step=1)
+    nama = st.text_input("👤 Nama Pengguna", value=st.session_state.get('nama_user', 'Najla Nafisa Arsy'))
+    umur_sekarang = st.number_input("🎂 Umur Sekarang (Tahun)", min_value=15, max_value=80, value=25)
+    umur_pensiun = st.number_input("👴 Rencana Umur Pensiun", min_value=umur_sekarang+1, max_value=100, value=55)
 
 with col_in2:
-    tahun_analisis = st.number_input("📅 Analisis Sampai Berapa Tahun ke Depan?", min_value=1, max_value=100, value=20, step=1)
+    investasi_bulanan = st.number_input("💵 Investasi Bulanan (Rp)", min_value=0.0, value=1000000.0, step=100000.0, format="%.0f")
+    bunga_tahunan = st.number_input("📈 Bunga Investasi Tahunan (%)", min_value=0.0, max_value=100.0, value=8.0, step=0.1) / 100
+    target_dana = st.number_input("🎯 Target Dana Pensiun (Rp)", min_value=0.0, value=1000000000.0, step=10000000.0, format="%.0f")
 
 # ============================================================
-# PROSES PERHITUNGAN MATEMATIKA AKTUARIA
+# LOGIKA PERHITUNGAN AKTUARIA
 # ============================================================
+lama_investasi = umur_pensiun - umur_sekarang
+total_bulan = lama_investasi * 12
+bunga_bulanan = bunga_tahunan / 12
 
-# Peluang meninggal sederhana (Model Linier Aktuaria)
-qx = 0.0005 + (umur / 100000)
+# Hitung Future Value (FV) Annuity Due/Ordinary
+if bunga_bulanan > 0:
+    future_value = investasi_bulanan * (((1 + bunga_bulanan)**total_bulan - 1) / bunga_bulanan)
+else:
+    future_value = investasi_bulanan * total_bulan
 
-# Peluang hidup (px)
-px = 1 - qx
-
-# Survival probability dalam n tahun (npx)
-survival = px ** tahun_analisis
-
-# Peluang meninggal dalam n tahun (nqx)
-death_prob = 1 - survival
-
-# Expected future lifetime sederhana (E[x])
-ex = 75 - umur if umur < 75 else 5
+# Status Pencapaian
+if future_value >= target_dana:
+    status_msg = "🎯 Target Dana Pensiun Tercapai"
+    banner_color = "#4CAF50" # Hijau
+    rekom_bg = "#f1fff5"
+    rekom_title_color = "#28a745"
+    rekom_text = "Selamat! Strategi investasi Anda saat ini diperkirakan sudah cukup untuk mencapai kemandirian finansial di masa tua sesuai target."
+else:
+    status_msg = "⚠️ Target Dana Pensiun Belum Tercapai"
+    banner_color = "#ff4d6d" # Merah Muda Tua
+    rekom_bg = "#fff0f4"
+    rekom_title_color = "#ff4d88"
+    kekurangan = target_dana - future_value
+    tambahan_bulanan = kekurangan / (((1 + bunga_bulanan)**total_bulan - 1) / bunga_bulanan) if bunga_bulanan > 0 else kekurangan / total_bulan
+    rekom_text = f"Dana pensiun Anda diproyeksikan masih kurang. Disarankan untuk menambah investasi bulanan sebesar **Rp {tambahan_bulanan:,.0f}** agar target Anda tercapai."
 
 # ============================================================
-# OUTPUT HASIL UI (RESULT CARDS)
+# OUTPUT HASIL UI
 # ============================================================
-st.markdown('<div style="margin-top:20px;"></div>', unsafe_allow_html=True)
+st.markdown('<div class="result-box">', unsafe_allow_html=True)
+st.markdown('<div class="result-title">Hasil Simulasi Dana Pensiun</div>', unsafe_allow_html=True)
+
 col_res1, col_res2, col_res3 = st.columns(3)
 
 with col_res1:
-    st.markdown(f"""
-    <div class="result-card">
-        <div class="card-label">Peluang Bertahan Hidup</div>
-        <div class="card-val">{survival*100:.2f}%</div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(f'<div class="res-card"><div class="card-label">Nama Pengguna</div><div class="card-val">{nama}</div></div>', unsafe_allow_html=True)
 
 with col_res2:
-    st.markdown(f"""
-    <div class="result-card">
-        <div class="card-label">Peluang Meninggal</div>
-        <div class="card-val">{death_prob*100:.2f}%</div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(f'<div class="res-card"><div class="card-label">Masa Investasi</div><div class="card-val">{lama_investasi} Tahun</div></div>', unsafe_allow_html=True)
 
 with col_res3:
-    st.markdown(f"""
-    <div class="result-card">
-        <div class="card-label">Expected Lifetime</div>
-        <div class="card-val">±{ex} Tahun</div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(f'<div class="res-card"><div class="card-label">Estimasi Dana Akhir</div><div class="card-val">Rp {future_value:,.0f}</div></div>', unsafe_allow_html=True)
+
+st.markdown(f'<div class="status-banner" style="background:{banner_color};">{status_msg}</div>', unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
 
 # ============================================================
-# GRAFIK SURVIVAL (MATPLOTLIB)
+# GRAFIK & TABEL PERTUMBUHAN
 # ============================================================
-st.markdown('<div style="margin-top:40px;"></div>', unsafe_allow_html=True)
-col_viz, col_tbl = st.columns([3, 2])
+col_viz, col_data = st.columns([3, 2])
 
-# Data untuk grafik
-tahun_list = list(range(0, tahun_analisis + 1))
-survival_list = [(px ** t) * 100 for t in tahun_list]
+# Simulasi data untuk grafik
+usia_list = []
+dana_list = []
+saldo_temp = 0
+for u in range(umur_sekarang, umur_pensiun + 1):
+    usia_list.append(u)
+    dana_list.append(saldo_temp)
+    # Akumulasi 12 bulan per tahun
+    for _ in range(12):
+        saldo_temp = saldo_temp * (1 + bunga_bulanan) + investasi_bulanan
 
 with col_viz:
-    st.write("📊 **Grafik Proyeksi Peluang Survival**")
+    st.write("📊 **Proyeksi Pertumbuhan Dana Pensiun**")
     fig, ax = plt.subplots(figsize=(10, 6))
-    ax.plot(tahun_list, survival_list, color='#d63384', linewidth=3, marker='o', markersize=4, label="Peluang Hidup (%)")
-    ax.fill_between(tahun_list, survival_list, color='#ffcad4', alpha=0.3)
-    ax.set_xlabel("Tahun ke-n")
-    ax.set_ylabel("Peluang Bertahan Hidup (%)")
-    ax.set_title("Penurunan Probabilitas Survival Seiring Waktu")
-    ax.grid(True, linestyle='--', alpha=0.5)
-    ax.legend()
+    ax.plot(usia_list, dana_list, color='#ff4d88', linewidth=3, marker='o', markersize=4)
+    ax.fill_between(usia_list, dana_list, color='#ff4d88', alpha=0.1)
+    ax.set_xlabel("Usia (Tahun)")
+    ax.set_ylabel("Total Dana (Rp)")
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, loc: "{:,}".format(int(x))))
+    ax.grid(True, linestyle='--', alpha=0.6)
     st.pyplot(fig)
 
-with col_tbl:
-    st.write("📋 **Tabel Proyeksi Tahunan**")
-    df = pd.DataFrame({
-        "Tahun ke-": tahun_list,
-        "Peluang Survival (%)": [f"{round(x,2)}%" for x in survival_list]
+with col_data:
+    st.write("📋 **Tabel Akumulasi Tahunan**")
+    df_pensiun = pd.DataFrame({
+        "Usia": usia_list,
+        "Estimasi Dana (Rp)": [f"Rp {x:,.0f}" for x in dana_list]
     })
-    st.dataframe(df, use_container_width=True, hide_index=True)
+    st.dataframe(df_pensiun, use_container_width=True, hide_index=True)
 
 # ============================================================
 # REKOMENDASI SISTEM
 # ============================================================
-if survival > 0.90:
-    rekomendasi = "✅ **Risiko mortalitas relatif rendah.** Fokus utama disarankan pada akumulasi aset jangka panjang, investasi agresif, dan perencanaan dana pensiun dini."
-elif survival > 0.75:
-    rekomendasi = "⚠️ **Risiko mortalitas sedang.** Disarankan untuk mulai mempertimbangkan proteksi asuransi jiwa (Term Life) guna melindungi tanggungan finansial keluarga."
-else:
-    rekomendasi = "🚨 **Risiko mortalitas cukup tinggi.** Disarankan untuk segera memperkuat perlindungan finansial, melakukan evaluasi asuransi kesehatan, dan meninjau kembali wasiat atau distribusi aset."
-
 st.markdown(f"""
-<div class="rekom-box">
-    <div class="rekom-title">💡 Rekomendasi Sistem</div>
-    <div class="rekom-text">{rekomendasi}</div>
+<div style="background:{rekom_bg}; padding:25px; border-radius:25px; margin-top:20px; box-shadow:0px 5px 15px rgba(0,0,0,0.05); border-left: 5px solid {rekom_title_color};">
+    <h3 style="color:{rekom_title_color}; margin-top:0; font-family:'Poppins';">💡 Rekomendasi Sistem</h3>
+    <p style="font-family:'Poppins'; color:#444; line-height:1.8;">{rekom_text}</p>
 </div>
 """, unsafe_allow_html=True)
 
 # ============================================================
-# ACTION BUTTONS & NAVIGASI FOOTER (SAMA SEPERTI TVM.PY)
+# NAVIGASI FOOTER (CETAK & KEMBALI)
 # ============================================================
 st.markdown("---")
-col_btn1, col_btn2, col_btn3 = st.columns([2, 2, 2])
+col_f1, col_f2, col_f3 = st.columns([2, 2, 2])
 
-with col_btn1:
-    # Trigger cetak browser/simpan PDF
-    if st.button("🖨️ Cetak Laporan (PDF/Print)", use_container_width=True):
-        st.markdown("""
-            <script>
-                window.print();
-            </script>
-        """, unsafe_allow_html=True)
+with col_f1:
+    # Menggunakan HTML Komponen murni dengan penyesuaian tinggi (height=70) agar teks tombol cetak tertampung sempurna
+    print_html = """
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: transparent; overflow: hidden; }
+        .luxury-print-btn {
+            background: linear-gradient(135deg, #ff4d88, #ff758f);
+            color: white !important;
+            border: none;
+            padding: 12px 20px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            display: block;
+            box-shadow: 0px 4px 15px rgba(255, 77, 136, 0.2);
+            transition: all 0.3s ease;
+            text-align: center;
+            line-height: 1.3;
+        }
+        .luxury-print-btn:hover {
+            background: linear-gradient(135deg, #ff2a70, #ff4d88);
+            box-shadow: 0px 6px 20px rgba(255, 77, 136, 0.3);
+        }
+    </style>
+    <button class="luxury-print-btn" onclick="window.parent.parent.print()">🖨️ Cetak Hasil Laporan (PDF/Print)</button>
+    """
+    components.html(print_html, height=70)
 
-with col_btn3:
-    # Navigasi kembali ke menu utama secara aman
+with col_f3:
     if st.button("⬅️ Kembali ke Menu Utama", use_container_width=True):
         st.switch_page("pages/menu.py")
 
-# Branding Footer khusus web saja
+# Footer Branding
 st.markdown("""
 <div class="no-print" style="text-align: center; color: #aaa; margin-top: 30px; font-size: 12px; font-family: 'Poppins';">
-    &lt;/&gt; Actuarial Decision Support System — Mortality Analysis Module. Dibuat oleh Najla Nafisa Arsy
+    &lt;/&gt; Actuarial Decision Support System — Retirement Simulation Module. Dibuat oleh Najla Nafisa Arsy
 </div>
 """, unsafe_allow_html=True)
