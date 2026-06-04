@@ -5,7 +5,7 @@
 # ============================================================
 
 import streamlit as st
-import streamlit.components.v1 as components  # Komponen native untuk menangani JavaScript Cetak
+import streamlit.components.v1 as components  # Komponen native untuk JavaScript Cetak
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -32,7 +32,7 @@ st.set_page_config(
 # ============================================================
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&family=Playfair+Display:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght=300;400;500;700&family=Playfair+Display:wght=700&display=swap');
 
 /* Style Latar Belakang Utama */
 .stApp {
@@ -92,7 +92,7 @@ st.markdown("""
     .no-print,
     .stDownloadButton,
     iframe {
-        display: none !important; /* Sembunyikan seluruh tombol navigasi dan iframe saat cetak */
+        display: none !important;
     }
     .stApp {
         background: white !important;
@@ -135,12 +135,10 @@ setoran_kumulatif = [modal_awal]
 saldo_berjalan = modal_awal
 total_setoran_berjalan = modal_awal
 
-# Menghitung perkembangan dana bulan demi bulan untuk visualisasi grafik & tabel
 for bulan in range(1, n + 1):
     saldo_berjalan = (saldo_berjalan * (1 + i)) + investasi_bulanan
     total_setoran_berjalan += investasi_bulanan
     
-    # Simpan koordinat data setiap kelipatan 12 bulan (tahunan) untuk grafik/tabel agar rapi
     if bulan % 12 == 0:
         tahun_list.append(bulan // 12)
         saldo_list.append(round(saldo_berjalan, 2))
@@ -182,7 +180,6 @@ with col_graph:
     st.write("📊 **Visualisasi Akumulasi Dana & Anuitas**")
     fig, ax = plt.subplots(figsize=(8, 5))
     
-    # Membuat grafik perbandingan modal investasi vs hasil akhir majemuk
     ax.plot(tahun_list, saldo_list, linewidth=3, marker='o', color='#d63384', label="Nilai Akhir Dana (FV)")
     ax.fill_between(tahun_list, saldo_list, color='#ffcad4', alpha=0.4)
     ax.plot(tahun_list, setoran_kumulatif, linewidth=2, linestyle='--', color='#888888', label="Total Modal Disetor")
@@ -205,7 +202,6 @@ with col_table:
     
     st.dataframe(df, use_container_width=True, hide_index=True)
     
-    # Fitur Export berkas spreadsheet .csv
     csv = df.to_csv(index=False).encode('utf-8')
     st.download_button(
         label="📥 Unduh Data Mentah (.csv)",
@@ -222,23 +218,26 @@ st.markdown("---")
 col_btn1, col_btn2, col_btn3 = st.columns([2, 2, 2])
 
 with col_btn1:
-    # Menggunakan HTML Komponen murni (iframe aman) agar browser mengeksekusi print ke window utama
     print_html = """
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: transparent; overflow: hidden; }
         .luxury-print-btn {
             background: linear-gradient(135deg, #ff4d88, #ff758f);
             color: white !important;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 20px;
             font-family: 'Poppins', sans-serif;
             font-size: 15px;
             font-weight: 500;
             border-radius: 8px;
             cursor: pointer;
             width: 100%;
+            display: block;
             box-shadow: 0px 4px 15px rgba(255, 77, 136, 0.2);
             transition: all 0.3s ease;
             text-align: center;
+            line-height: 1.3;
         }
         .luxury-print-btn:hover {
             background: linear-gradient(135deg, #ff2a70, #ff4d88);
@@ -247,14 +246,12 @@ with col_btn1:
     </style>
     <button class="luxury-print-btn" onclick="window.parent.parent.print()">🖨️ Cetak Hasil Laporan (PDF/Print)</button>
     """
-    components.html(print_html, height=50)
+    components.html(print_html, height=70)
 
 with col_btn3:
-    # Tombol balik ke menu utama tanpa merusak token session login
     if st.button("⬅️ Kembali ke Menu Utama", use_container_width=True):
         st.switch_page("pages/menu.py")
 
-# Hak Cipta & Informasi Identitas
 st.markdown("""
 <div class="no-print" style="text-align: center; color: #aaa; margin-top: 30px; font-size: 12px; font-family: 'Poppins';">
     &lt;/&gt; Actuarial Decision Support System — Python Core Module. Dibuat oleh Najla Nafisa Arsy
