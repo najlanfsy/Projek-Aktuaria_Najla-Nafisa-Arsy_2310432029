@@ -47,7 +47,7 @@ st.markdown("""
     100% { transform: translateY(0px); }
 }
 
-/* Modifikasi Container Selamat Datang (Native Wrapper Trick) */
+/* Modifikasi Container Selamat Datang */
 div[data-testid="stVerticalBlock"] > div:has(div.welcome-anchor) {
     background: linear-gradient(135deg, #ffb6c1, #ffc2d1, #ffe3ec) !important;
     padding: 50px 40px !important;
@@ -59,7 +59,7 @@ div[data-testid="stVerticalBlock"] > div:has(div.welcome-anchor) {
     animation: floatHeader 5s ease-in-out infinite;
 }
 
-/* Font Gabungan Aesthetic untuk Judul Utama */
+/* Font Judul Utama */
 .aesthetic-title {
     font-family: 'Playfair Display', serif;
     font-size: 46px;
@@ -124,57 +124,60 @@ div[data-testid="stVerticalBlock"] > div:has(div.welcome-anchor) {
     letter-spacing: 0.5px;
 }
 
-/* 🌸 KUSTOMISASI TOMBOL MENJADI KOTAK MENU LEBIH BESAR, CANTIK, & ANIMATIF 🌸 */
+/* 🌸 KUSTOMISASI TOMBOL MENJADI KARTU MENU MEWAH (CARD-STYLE) 🌸 */
 div.stButton > button {
-    background: linear-gradient(135deg, #ffffff, #fff0f3) !important;
+    background: linear-gradient(135deg, #ffffff, #fffdfd) !important;
     border: 2px solid #ffe3ec !important;
-    border-radius: 35px !important; /* Membuat sudut lebih melengkung lembut */
-    padding: 40px 30px !important;  /* Diperbesar ukurannya */
+    border-radius: 24px !important; 
+    padding: 25px 20px !important;  
     width: 100% !important;
-    min-height: 240px !important;   /* Menambah tinggi tombol agar lebih luxury */
-    box-shadow: 0px 12px 30px rgba(255, 105, 135, 0.08) !important;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-    color: #63414d !important;
-    font-family: 'Poppins', sans-serif !important;
-    text-align: center !important;
-    line-height: 1.5 !important;
+    height: 180px !important;   /* Mematok tinggi seragam agar simetris */
+    box-shadow: 0px 10px 25px rgba(255, 105, 135, 0.07) !important;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2) !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
+    white-space: normal !important; /* Memaksa teks membungkus ke bawah */
+    word-wrap: break-word !important;
 }
 
-/* 🌟 ANIMASI KETIKA KURSOR DIARAHKAN (HOVER EFFECT) 🌟 */
+/* Override default p tag di dalam button Streamlit */
+div.stButton > button p {
+    font-family: 'Poppins', sans-serif !important;
+    color: #63414d !important;
+    transition: color 0.3s ease !important;
+    line-height: 1.4 !important;
+}
+
+/* 🌟 INTERACTIVE HOVER EFFECT 🌟 */
 div.stButton > button:hover {
-    transform: translateY(-15px) scale(1.03) !important; /* Efek mengangkat lebih tinggi */
+    transform: translateY(-10px) scale(1.02) !important; /* Tombol terangkat naik */
     background: linear-gradient(135deg, #ff4d88, #ff758f) !important;
-    color: #ffffff !important;
     border-color: #ff4d88 !important;
-    box-shadow: 0px 25px 40px rgba(255, 77, 136, 0.35) !important;
+    box-shadow: 0px 18px 35px rgba(255, 77, 136, 0.3) !important;
 }
 
-/* Mengubah warna teks deskripsi di dalam tombol saat di-hover agar putih bersih */
+/* Perubahan warna teks di dalam tombol saat hover */
 div.stButton > button:hover p {
-    color: #ffe3ec !important;
+    color: #ffffff !important;
 }
 
-/* Style khusus untuk teks di dalam tombol */
-.btn-icon {
-    font-size: 42px; /* Ukuran emoji diperbesar */
-    margin-bottom: 12px;
+/* Mini framework layout teks di dalam tombol */
+.menu-title {
+    font-size: 17px !important;
+    font-weight: 700 !important;
+    margin-top: 5px !important;
+    margin-bottom: 6px !important;
+    display: block !important;
 }
-.btn-title {
-    font-size: 20px; /* Ukuran judul menu */
-    font-weight: 700;
-    display: block;
-    margin-bottom: 8px;
-}
-.btn-desc {
-    font-size: 13px; /* Ukuran deskripsi menu kecil di bawahnya */
-    font-weight: 400;
-    opacity: 0.85;
-    line-height: 1.4;
-    display: block;
+
+.menu-desc {
+    font-size: 12px !important;
+    font-weight: 400 !important;
+    opacity: 0.75 !important;
+    display: block !important;
+    text-align: center !important;
 }
 
 /* Footer Copyright Style */
@@ -195,15 +198,11 @@ div.stButton > button:hover p {
 # HEADER & WELCOME CARD (ONE HIGH-END NATIVE WRAPPER)
 # ============================================================
 with st.container():
-    # Pemicu style CSS kustom agar menyatu ke dalam satu card pink besar
     st.markdown('<div class="welcome-anchor"></div>', unsafe_allow_html=True)
-    
-    # Render Tipografi Judul Gabungan Elegan
     st.markdown('<div class="aesthetic-title">ACTUARIAL DECISION SUPPORT SYSTEM</div>', unsafe_allow_html=True)
     st.markdown('<div class="aesthetic-subtitle">Smart Financial & Actuarial Analysis Platform</div>', unsafe_allow_html=True)
     st.markdown('<div class="cute-divider"></div>', unsafe_allow_html=True)
     
-    # Render Konten Selamat Datang
     st.markdown('<div class="aesthetic-welcome-title">👋 Selamat Datang, Najla Nafisa Arsy</div>', unsafe_allow_html=True)
     st.markdown(
         '<div class="aesthetic-welcome-desc">'
@@ -247,7 +246,7 @@ with col3:
         st.switch_page("pages/kredit.py")
 
 # Jarak Baris Kedua
-st.markdown('<div style="margin-top: 30px;"></div>', unsafe_allow_html=True)
+st.markdown('<div style="margin-top: 25px;"></div>', unsafe_allow_html=True)
 col4, col5, col6 = st.columns(3)
 
 with col4:
@@ -273,10 +272,6 @@ with col6:
         help="Akses analisis peluang bertahan hidup berdasarkan tabel hukum mortalitas."
     ):
         st.switch_page("pages/mortalitas.py")
-
-# Jarak Baris Ketiga
-st.markdown('<div style="margin-top: 25px;"></div>', unsafe_allow_html=True)
-col7, _, _ = st.columns(3)
 
 
 # ============================================================
