@@ -5,6 +5,7 @@
 # ============================================================
 
 import streamlit as st
+import streamlit.components.v1 as components  # Komponen native untuk menangani JavaScript Cetak
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -107,41 +108,16 @@ st.markdown("""
     line-height: 1.9;
 }
 
-/* Styling Khusus Tombol Cetak HTML Premium */
-.native-print-btn {
-    background: linear-gradient(135deg, #ff4d88, #ff758f);
-    color: white !important;
-    border: none;
-    padding: 12px 24px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 16px;
-    font-weight: 500;
-    border-radius: 12px;
-    cursor: pointer;
-    width: 100%;
-    box-shadow: 0px 4px 15px rgba(255, 77, 136, 0.2);
-    transition: all 0.3s ease;
-    text-align: center;
-}
-
-.native-print-btn:hover {
-    background: linear-gradient(135deg, #ff2a70, #ff4d88);
-    transform: translateY(-2px);
-    box-shadow: 0px 6px 20px rgba(255, 77, 136, 0.3);
-}
-
 /* CSS KHUSUS SAAT CETAK LAPORAN (PRINT/PDF) */
 @media print {
-    /* Sembunyikan sidebar, formulir input, tombol aksi, dan widget navigasi */
     [data-testid="stSidebar"], 
     [data-testid="stForm"],
     [data-testid="stHeader"],
     .stButton, 
     .no-print,
-    div.element-container:has(button.native-print-btn) {
-        display: none !important;
+    iframe {
+        display: none !important; /* Sembunyikan elemen navigasi dan tombol saat cetak */
     }
-    /* Mengoptimalkan kontras warna untuk cetakan kertas / PDF */
     .stApp {
         background: white !important;
         color: black !important;
@@ -233,10 +209,8 @@ with col_table:
         "Saldo Investasi (Rp)": [f"Rp {x:,.2f}" for x in saldo_list]
     })
     
-    # Menampilkan tabel kustom ber-style pink
     st.dataframe(df, use_container_width=True, hide_index=True)
     
-    # Opsi Tambahan untuk export data mentah
     csv = df.to_csv(index=False).encode('utf-8')
     st.download_button(
         label="📥 Unduh Data Mentah (.csv)",
@@ -268,13 +242,34 @@ st.markdown("---")
 col_btn1, col_btn2, col_btn3 = st.columns([2, 2, 2])
 
 with col_btn1:
-    # Menggunakan tombol HTML murni yang mengeksekusi fungsi print dokumen utama (window.parent)
-    st.markdown("""
-        <button class="native-print-btn" onclick="window.parent.print()">🖨️ Cetak Hasil Laporan (PDF/Print)</button>
-    """, unsafe_allow_html=True)
+    # Menggunakan HTML Komponen murni (iframe aman) agar browser mengeksekusi print ke window utama
+    print_html = """
+    <style>
+        .luxury-print-btn {
+            background: linear-gradient(135deg, #ff4d88, #ff758f);
+            color: white !important;
+            border: none;
+            padding: 10px 20px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0px 4px 15px rgba(255, 77, 136, 0.2);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .luxury-print-btn:hover {
+            background: linear-gradient(135deg, #ff2a70, #ff4d88);
+            box-shadow: 0px 6px 20px rgba(255, 77, 136, 0.3);
+        }
+    </style>
+    <button class="luxury-print-btn" onclick="window.parent.parent.print()">🖨️ Cetak Hasil Laporan (PDF/Print)</button>
+    """
+    components.html(print_html, height=50)
 
 with col_btn3:
-    # Tombol navigasi kembali ke menu.py secara aman
     if st.button("⬅️ Kembali ke Menu Utama", use_container_width=True):
         st.switch_page("pages/menu.py")
 
