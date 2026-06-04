@@ -24,7 +24,7 @@ st.set_page_config(
 )
 
 # ============================================================
-# SURGICAL CSS INJECTION: GLAMOUR PINK STYLE & INTERACTIVE ANIMATION
+# SURGICAL CSS INJECTION: 3D GLAMOUR PINK STYLE
 # ============================================================
 st.markdown("""
 <style>
@@ -124,60 +124,79 @@ div[data-testid="stVerticalBlock"] > div:has(div.welcome-anchor) {
     letter-spacing: 0.5px;
 }
 
-/* 🌸 KUSTOMISASI TOMBOL MENJADI KARTU MENU MEWAH (CARD-STYLE) 🌸 */
+/* Sembunyikan tombol native Streamlit sepenuhnya agar tidak merusak visual */
 div.stButton > button {
-    background: linear-gradient(135deg, #ffffff, #fffdfd) !important;
-    border: 2px solid #ffe3ec !important;
-    border-radius: 24px !important; 
-    padding: 25px 20px !important;  
-    width: 100% !important;
-    height: 180px !important;   /* Mematok tinggi seragam agar simetris */
-    box-shadow: 0px 10px 25px rgba(255, 105, 135, 0.07) !important;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2) !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    white-space: normal !important; /* Memaksa teks membungkus ke bawah */
-    word-wrap: break-word !important;
+    display: none !important;
 }
 
-/* Override default p tag di dalam button Streamlit */
-div.stButton > button p {
-    font-family: 'Poppins', sans-serif !important;
-    color: #63414d !important;
-    transition: color 0.3s ease !important;
-    line-height: 1.4 !important;
+/* 🌸 KARTU MENU 3D LUXURY KUSTOM 🌸 */
+.menu-card-3d {
+    background: linear-gradient(135deg, #ffffff, #fff0f3);
+    border-radius: 25px;
+    padding: 30px 20px;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 210px;
+    
+    /* Efek Timbul 3D (Neumorphism / Isometrik Shadow) */
+    border-top: 2px solid #ffffff;
+    border-left: 2px solid #ffffff;
+    border-right: 2px solid #ffe3ec;
+    border-bottom: 5px solid #fca3b7; /* Efek ketebalan bawah tombol */
+    
+    box-shadow: 0px 10px 20px rgba(255, 105, 135, 0.12), 
+                inset 0px 2px 5px rgba(255, 255, 255, 0.8);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* 🌟 INTERACTIVE HOVER EFFECT 🌟 */
-div.stButton > button:hover {
-    transform: translateY(-10px) scale(1.02) !important; /* Tombol terangkat naik */
-    background: linear-gradient(135deg, #ff4d88, #ff758f) !important;
-    border-color: #ff4d88 !important;
-    box-shadow: 0px 18px 35px rgba(255, 77, 136, 0.3) !important;
+/* Icon Di Dalam Kartu Menu */
+.menu-card-3d .icon {
+    font-size: 44px;
+    margin-bottom: 12px;
+    filter: drop-shadow(0px 5px 5px rgba(255, 105, 135, 0.2));
+    transition: transform 0.3s ease;
 }
 
-/* Perubahan warna teks di dalam tombol saat hover */
-div.stButton > button:hover p {
-    color: #ffffff !important;
+/* Judul Di Dalam Kartu Menu */
+.menu-card-3d .title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #63414d;
+    margin-bottom: 6px;
+    line-height: 1.3;
 }
 
-/* Mini framework layout teks di dalam tombol */
-.menu-title {
-    font-size: 17px !important;
-    font-weight: 700 !important;
-    margin-top: 5px !important;
-    margin-bottom: 6px !important;
-    display: block !important;
+/* Deskripsi Di Dalam Kartu Menu */
+.menu-card-3d .desc {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12.5px;
+    font-weight: 400;
+    color: #8c6b77;
+    line-height: 1.4;
+    opacity: 0.9;
 }
 
-.menu-desc {
-    font-size: 12px !important;
-    font-weight: 400 !important;
-    opacity: 0.75 !important;
-    display: block !important;
-    text-align: center !important;
+/* 🌟 INTERACTIVE 3D HOVER EFFECT 🌟 */
+.menu-card-3d:hover {
+    transform: translateY(-8px); /* Mengambang naik */
+    background: linear-gradient(135deg, #ff4d88, #ff758f);
+    border-top: 2px solid #ff758f;
+    border-left: 2px solid #ff758f;
+    border-bottom: 5px solid #d6225c; /* Dasar tebal saat aktif */
+    box-shadow: 0px 20px 35px rgba(255, 77, 136, 0.35);
+}
+
+/* Perubahan teks menjadi putih bersih saat di-hover */
+.menu-card-3d:hover .title { color: #ffffff; }
+.menu-card-3d:hover .desc { color: #ffe3ec; }
+.menu-card-3d:hover .icon {
+    transform: scale(1.15) rotate(5deg); /* Efek icon membesar dan sedikit miring */
 }
 
 /* Footer Copyright Style */
@@ -222,55 +241,73 @@ st.markdown('<div class="section-pink-title">✨ Menu Perhitungan Aktuaria & Fin
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    if st.button(
-        "💰\nTime Value of Money\nBunga tunggal, majemuk, & nilai waktu uang", 
-        key="btn_tvm", 
-        help="Akses perhitungan bunga tunggal, majemuk, dan nilai waktu dari uang."
-    ):
+    st.markdown("""
+    <div class="menu-card-3d">
+        <div class="icon">💰</div>
+        <div class="title">Time Value of Money</div>
+        <div class="desc">Bunga tunggal, majemuk, & nilai waktu dari uang.</div>
+    </div>
+    """, unsafe_allow_html=True)
+    if st.button("Akses TVM", key="btn_tvm", help="Buka Halaman Time Value of Money"):
         st.switch_page("pages/tvm.py")
 
 with col2:
-    if st.button(
-        "📈\nInvestasi & Anuitas\nSimulasi investasi berkala & tabungan", 
-        key="btn_investasi", 
-        help="Akses simulasi investasi berkala, tabungan berjangka, dan nilai anuitas."
-    ):
+    st.markdown("""
+    <div class="menu-card-3d">
+        <div class="icon">📈</div>
+        <div class="title">Investasi & Anuitas</div>
+        <div class="desc">Simulasi investasi berkala, tabungan berjangka, & anuitas.</div>
+    </div>
+    """, unsafe_allow_html=True)
+    if st.button("Akses Investasi", key="btn_investasi", help="Buka Halaman Investasi & Anuitas"):
         st.switch_page("pages/investasi.py")
 
 with col3:
-    if st.button(
-        "🏦\nSimulasi Kredit\nKalkulasi angsuran amortisasi pinjaman", 
-        key="btn_kredit", 
-        help="Akses perhitungan angsuran bulanan amortisasi kredit pinjaman."
-    ):
+    st.markdown("""
+    <div class="menu-card-3d">
+        <div class="icon">🏦</div>
+        <div class="title">Simulasi Kredit</div>
+        <div class="desc">Kalkulasi nilai angsuran bulanan amortisasi kredit pinjaman.</div>
+    </div>
+    """, unsafe_allow_html=True)
+    if st.button("Akses Kredit", key="btn_kredit", help="Buka Halaman Simulasi Kredit"):
         st.switch_page("pages/kredit.py")
 
 # Jarak Baris Kedua
-st.markdown('<div style="margin-top: 25px;"></div>', unsafe_allow_html=True)
+st.markdown('<div style="margin-top: 30px;"></div>', unsafe_allow_html=True)
 col4, col5, col6 = st.columns(3)
 
 with col4:
-    if st.button(
-        "🛡️\nPremi Asuransi Jiwa\nEstimasi nilai premi murni tunggal & berkala", 
-        key="btn_premi", 
-        help="Akses estimasi perhitungan nilai premi murni tunggal maupun berkala."
-    ):
+    st.markdown("""
+    <div class="menu-card-3d">
+        <div class="icon">🛡️</div>
+        <div class="title">Premi Asuransi Jiwa</div>
+        <div class="desc">Estimasi perhitungan nilai premi murni tunggal maupun berkala.</div>
+    </div>
+    """, unsafe_allow_html=True)
+    if st.button("Akses Premi", key="btn_premi", help="Buka Halaman Premi Asuransi Jiwa"):
         st.switch_page("pages/premi.py")
 
 with col5:
-    if st.button(
-        "👴\nDana Pensiun\nPerencanaan akumulasi dana hari tua", 
-        key="btn_pensiun", 
-        help="Akses perencanaan akumulasi dana hari tua dan simulasi alokasi investasi."
-    ):
+    st.markdown("""
+    <div class="menu-card-3d">
+        <div class="icon">👴</div>
+        <div class="title">Dana Pensiun</div>
+        <div class="desc">Perencanaan akumulasi dana hari tua & simulasi alokasi investasi.</div>
+    </div>
+    """, unsafe_allow_html=True)
+    if st.button("Akses Pensiun", key="btn_pensiun", help="Buka Halaman Dana Pensiun"):
         st.switch_page("pages/pensiun.py")
 
 with col6:
-    if st.button(
-        "📊\nMortalitas & Survival\nAnalisis peluang hidup tabel mortalitas", 
-        key="btn_mortalitas", 
-        help="Akses analisis peluang bertahan hidup berdasarkan tabel hukum mortalitas."
-    ):
+    st.markdown("""
+    <div class="menu-card-3d">
+        <div class="icon">📊</div>
+        <div class="title">Mortalitas & Survival</div>
+        <div class="desc">Analisis peluang bertahan hidup berdasarkan tabel hukum mortalitas.</div>
+    </div>
+    """, unsafe_allow_html=True)
+    if st.button("Akses Mortalitas", key="btn_mortalitas", help="Buka Halaman Mortalitas & Survival"):
         st.switch_page("pages/mortalitas.py")
 
 
