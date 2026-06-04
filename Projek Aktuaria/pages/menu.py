@@ -124,31 +124,57 @@ div[data-testid="stVerticalBlock"] > div:has(div.welcome-anchor) {
     letter-spacing: 0.5px;
 }
 
-/* 🌸 KUSTOMISASI TOMBOL MENJADI KOTAK MENU BESAR & ANIMATIF 🌸 */
+/* 🌸 KUSTOMISASI TOMBOL MENJADI KOTAK MENU LEBIH BESAR, CANTIK, & ANIMATIF 🌸 */
 div.stButton > button {
     background: linear-gradient(135deg, #ffffff, #fff0f3) !important;
     border: 2px solid #ffe3ec !important;
-    border-radius: 30px !important;
-    padding: 35px 25px !important;
+    border-radius: 35px !important; /* Membuat sudut lebih melengkung lembut */
+    padding: 40px 30px !important;  /* Diperbesar ukurannya */
     width: 100% !important;
-    min-height: 175px !important;
-    box-shadow: 0px 10px 25px rgba(255, 105, 135, 0.06) !important;
+    min-height: 240px !important;   /* Menambah tinggi tombol agar lebih luxury */
+    box-shadow: 0px 12px 30px rgba(255, 105, 135, 0.08) !important;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
     color: #63414d !important;
     font-family: 'Poppins', sans-serif !important;
-    font-size: 19px !important;
-    font-weight: 700 !important;
     text-align: center !important;
-    line-height: 1.6 !important;
+    line-height: 1.5 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
 /* 🌟 ANIMASI KETIKA KURSOR DIARAHKAN (HOVER EFFECT) 🌟 */
 div.stButton > button:hover {
-    transform: translateY(-12px) scale(1.04) !important;
+    transform: translateY(-15px) scale(1.03) !important; /* Efek mengangkat lebih tinggi */
     background: linear-gradient(135deg, #ff4d88, #ff758f) !important;
     color: #ffffff !important;
     border-color: #ff4d88 !important;
-    box-shadow: 0px 20px 35px rgba(255, 77, 136, 0.35) !important;
+    box-shadow: 0px 25px 40px rgba(255, 77, 136, 0.35) !important;
+}
+
+/* Mengubah warna teks deskripsi di dalam tombol saat di-hover agar putih bersih */
+div.stButton > button:hover p {
+    color: #ffe3ec !important;
+}
+
+/* Style khusus untuk teks di dalam tombol */
+.btn-icon {
+    font-size: 42px; /* Ukuran emoji diperbesar */
+    margin-bottom: 12px;
+}
+.btn-title {
+    font-size: 20px; /* Ukuran judul menu */
+    font-weight: 700;
+    display: block;
+    margin-bottom: 8px;
+}
+.btn-desc {
+    font-size: 13px; /* Ukuran deskripsi menu kecil di bawahnya */
+    font-weight: 400;
+    opacity: 0.85;
+    line-height: 1.4;
+    display: block;
 }
 
 /* Footer Copyright Style */
@@ -197,31 +223,55 @@ st.markdown('<div class="section-pink-title">✨ Menu Perhitungan Aktuaria & Fin
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    if st.button("💰\n\nTime Value of Money", key="btn_tvm", help="Akses perhitungan bunga tunggal, majemuk, dan nilai waktu dari uang."):
+    if st.button(
+        "💰\nTime Value of Money\nBunga tunggal, majemuk, & nilai waktu uang", 
+        key="btn_tvm", 
+        help="Akses perhitungan bunga tunggal, majemuk, dan nilai waktu dari uang."
+    ):
         st.switch_page("pages/tvm.py")
 
 with col2:
-    if st.button("📈\n\nInvestasi & Anuitas", key="btn_investasi", help="Akses simulasi investasi berkala, tabungan berjangka, dan nilai anuitas."):
+    if st.button(
+        "📈\nInvestasi & Anuitas\nSimulasi investasi berkala & tabungan", 
+        key="btn_investasi", 
+        help="Akses simulasi investasi berkala, tabungan berjangka, dan nilai anuitas."
+    ):
         st.switch_page("pages/investasi.py")
 
 with col3:
-    if st.button("🏦\n\nSimulasi Kredit", key="btn_kredit", help="Akses perhitungan angsuran bulanan amortisasi kredit pinjaman."):
+    if st.button(
+        "🏦\nSimulasi Kredit\nKalkulasi angsuran amortisasi pinjaman", 
+        key="btn_kredit", 
+        help="Akses perhitungan angsuran bulanan amortisasi kredit pinjaman."
+    ):
         st.switch_page("pages/kredit.py")
 
 # Jarak Baris Kedua
-st.markdown('<div style="margin-top: 25px;"></div>', unsafe_allow_html=True)
+st.markdown('<div style="margin-top: 30px;"></div>', unsafe_allow_html=True)
 col4, col5, col6 = st.columns(3)
 
 with col4:
-    if st.button("🛡️\n\nPremi Asuransi Jiwa", key="btn_premi", help="Akses estimasi perhitungan nilai premi murni tunggal maupun berkala."):
+    if st.button(
+        "🛡️\nPremi Asuransi Jiwa\nEstimasi nilai premi murni tunggal & berkala", 
+        key="btn_premi", 
+        help="Akses estimasi perhitungan nilai premi murni tunggal maupun berkala."
+    ):
         st.switch_page("pages/premi.py")
 
 with col5:
-    if st.button("👴\n\nDana Pensiun", key="btn_pensiun", help="Akses perencanaan akumulasi dana hari tua dan simulasi alokasi investasi."):
+    if st.button(
+        "👴\nDana Pensiun\nPerencanaan akumulasi dana hari tua", 
+        key="btn_pensiun", 
+        help="Akses perencanaan akumulasi dana hari tua dan simulasi alokasi investasi."
+    ):
         st.switch_page("pages/pensiun.py")
 
 with col6:
-    if st.button("📊\n\nMortalitas & Survival", key="btn_mortalitas", help="Akses analisis peluang bertahan hidup berdasarkan tabel hukum mortalitas."):
+    if st.button(
+        "📊\nMortalitas & Survival\nAnalisis peluang hidup tabel mortalitas", 
+        key="btn_mortalitas", 
+        help="Akses analisis peluang bertahan hidup berdasarkan tabel hukum mortalitas."
+    ):
         st.switch_page("pages/mortalitas.py")
 
 # Jarak Baris Ketiga
